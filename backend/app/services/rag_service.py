@@ -1,3 +1,5 @@
+from wsgiref import headers
+
 import requests
 import faiss
 import numpy as np
@@ -22,7 +24,13 @@ def fetch_repo_files(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/HEAD?recursive=1"
 
-    r = requests.get(url)
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "RepoMind-AI",
+        "Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"
+    }
+
+    r = requests.get(url, headers=headers, timeout=15)
 
     files = []
 
@@ -51,13 +59,21 @@ def fetch_file_content(owner, repo, path):
 
 def build_index(text_chunks):
 
+    if not text_chunks:
+        return None, None
+
     embeddings = model.encode(text_chunks)
+
+    if len(embeddings) == 0:
+        return None, None
+
+    embeddings = np.array(embeddings)
 
     dim = embeddings.shape[1]
 
     index = faiss.IndexFlatL2(dim)
 
-    index.add(np.array(embeddings))
+    index.add(embeddings)
 
     return index, embeddings
 
@@ -118,6 +134,13 @@ def chat_with_repo(repo_url, question):
             chunks.append(f"{file}\n{text}")
 
         index, embeddings = build_index(chunks)
+
+        if index is None:
+            return {
+                "question": question,
+                "answer": "No repository content found for RAG.",
+                "sources": []
+            }
 
         # store metadata only
         if record is None:
