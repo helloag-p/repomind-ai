@@ -2,29 +2,32 @@ def compute_repo_score(context):
 
     score = 0
 
-    # README present
-    if context["readme"]:
+    files = context.get("files", [])
+
+    if "README.md" in [f.lower() for f in files]:
         score += 2
 
-    # languages detected
-    if len(context["languages"]) > 0:
-        score += 2
+    if "LICENSE" in [f.upper() for f in files]:
+        score += 1
 
-    # file structure depth
-    if len(context["tree"]) > 20:
-        score += 2
+    if any("test" in f.lower() for f in files):
+        score += 1
 
-    # config files
-    important = ["package.json", "requirements.txt", "Dockerfile"]
-    if any(f in context["files"] for f in important):
-        score += 2
+    if ".github" in files:
+        score += 1
 
-    # documentation
-    docs = ["README.md", "CONTRIBUTING.md"]
-    if any(f in context["files"] for f in docs):
+    if "docs" in files:
+        score += 1
+
+    if len(files) > 10:
+        score += 1
+
+    if len(context.get("languages", {})) > 1:
+        score += 1
+
+    if len(context.get("tree", [])) > 20:
         score += 2
 
     return {
-        "repo_score": score,
-        "max_score": 10
+        "repo_score": min(score, 10)
     }

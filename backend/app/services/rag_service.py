@@ -163,9 +163,15 @@ def chat_with_repo(repo_url, question):
         for i in I[0]
     ])[:6000]
     prompt = f"""
-You are a senior software engineer.
+You are an expert software engineer.
 
-Use the following repository code to answer the question.
+Analyze the repository and answer clearly.
+
+RULES:
+- Use proper formatting (headings, bullet points)
+- Be concise but informative
+- Avoid raw markdown symbols like ** if not needed
+- Structure answer like a professional report
 
 CODE CONTEXT:
 {context}

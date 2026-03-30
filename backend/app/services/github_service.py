@@ -90,3 +90,19 @@ def get_repo_context(repo_url):
         "languages": languages,
         "tree": tree
     }
+
+def get_latest_commit_sha(owner, repo):
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return None
+
+    data = response.json()
+
+    if len(data) == 0:
+        return None
+
+    return data[0]["sha"]
