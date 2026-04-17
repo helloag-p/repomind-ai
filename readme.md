@@ -94,7 +94,7 @@
                         │  REST API calls
                         ▼
 ┌─────────────────────────────────────────────────────────┐
-│              Backend  (FastAPI + Railway)                 │
+│              Backend  (FastAPI + Render)                 │
 │                                                           │
 │   ┌─────────────┐   ┌──────────────┐  ┌──────────────┐  │
 │   │   Routes    │──▶│   Services   │─▶│    Models    │  │
@@ -126,7 +126,7 @@
 | **Backend** | FastAPI, SQLAlchemy, Python |
 | **AI / ML** | Google Gemini API, RAG, FAISS, Sentence Transformers (MiniLM) |
 | **Database** | Neon PostgreSQL |
-| **Deployment** | Vercel (frontend), Railway (backend) |
+| **Deployment** | Vercel (frontend), Render (backend) |
 
 ---
 
