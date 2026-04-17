@@ -17,4 +17,4 @@ class RepoIndex(Base):
     # NEW
     analysis = Column(Text)
     repo_score = Column(Integer)
-    indexed_files = Column(Text)
+    # indexed_files = Column(Text)
